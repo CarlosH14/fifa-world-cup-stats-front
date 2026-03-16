@@ -1,0 +1,320 @@
+<main class="stats">
+  <section class="stats__hero">
+    <div class="container">
+      <span class="tag">📊 Data &amp; Analysis</span>
+      <h1 class="stats__hero-title">World Cup Statistics</h1>
+      <p class="stats__hero-subtitle">
+        Explore comprehensive stats from every FIFA World Cup tournament
+      </p>
+    </div>
+  </section>
+
+  <!-- Category Tabs -->
+  <div class="stats__tabs">
+    <div class="container">
+      <div class="stats__tabs-list">
+        @for (cat of categories; track cat.id) {
+          <button
+            class="stats__tab"
+            [class.stats__tab--active]="filter().category === cat.id"
+            (click)="setCategory(cat.id)"
+          >
+            <span>{{ cat.icon }}</span>
+            <span>{{ cat.label }}</span>
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="stats__filters">
+    <div class="container">
+      <div class="stats__filters-row">
+
+        <!-- Search -->
+        <div class="stats__filter-group">
+          <label class="stats__filter-label" for="search">🔍 Search</label>
+          <input
+            id="search"
+            type="text"
+            class="stats__filter-input"
+            [placeholder]="filter().category === 'top-scorers' ? 'Player or nationality...' : filter().category === 'tournaments' ? 'Host or champion...' : 'Team name...'"
+            [value]="filter().searchTerm"
+            (input)="updateSearch($any($event.target).value)"
+          >
+        </div>
+
+        <!-- Nationality / Confederation Filter -->
+        @if (filter().category === 'top-scorers') {
+          <div class="stats__filter-group">
+            <label class="stats__filter-label" for="nationality">🌍 Nationality</label>
+            <select
+              id="nationality"
+              class="stats__filter-select"
+              [value]="filter().nationality"
+              (change)="updateNationality($any($event.target).value)"
+            >
+              @for (nat of nationalities; track nat) {
+                <option [value]="nat">{{ nat }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="stats__filter-group">
+            <label class="stats__filter-label" for="minGoals">⚽ Min Goals: {{ filter().minGoals }}</label>
+            <input
+              id="minGoals"
+              type="range"
+              class="stats__filter-range"
+              min="0"
+              max="16"
+              step="1"
+              [value]="filter().minGoals"
+              (input)="updateMinGoals(+$any($event.target).value)"
+            >
+          </div>
+        }
+
+        @if (filter().category === 'teams') {
+          <div class="stats__filter-group">
+            <label class="stats__filter-label" for="confederation">🌐 Confederation</label>
+            <select
+              id="confederation"
+              class="stats__filter-select"
+              [value]="filter().nationality"
+              (change)="updateNationality($any($event.target).value)"
+            >
+              @for (conf of confederations; track conf) {
+                <option [value]="conf">{{ conf }}</option>
+              }
+            </select>
+          </div>
+        }
+
+        <!-- Results count -->
+        <div class="stats__filter-count">
+          @if (filter().category === 'top-scorers') {
+            <span>{{ filteredScorers().length }} results</span>
+          } @else if (filter().category === 'tournaments') {
+            <span>{{ filteredTournaments().length }} results</span>
+          } @else {
+            <span>{{ filteredTeams().length }} results</span>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="stats__content section">
+    <div class="container">
+
+      @if (isLoading()) {
+        <div class="stats__loading">
+          <div class="stats__loading-spinner"></div>
+          <p>Loading statistics...</p>
+        </div>
+      }
+
+      <!-- Top Scorers Table -->
+      @if (!isLoading() && filter().category === 'top-scorers') {
+        <div class="stats__table-wrapper">
+          <table class="stats__table">
+            <thead>
+              <tr>
+                <th class="stats__th">Rank</th>
+                <th class="stats__th stats__th--sortable" (click)="updateSort('name')">
+                  Player {{ getSortIcon('name') }}
+                </th>
+                <th class="stats__th">Nationality</th>
+                <th class="stats__th">Position</th>
+                <th class="stats__th stats__th--sortable" (click)="updateSort('goals')">
+                  Goals {{ getSortIcon('goals') }}
+                </th>
+                <th class="stats__th stats__th--sortable" (click)="updateSort('appearances')">
+                  Apps {{ getSortIcon('appearances') }}
+                </th>
+                <th class="stats__th">Tournaments</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (scorer of filteredScorers(); track scorer.id) {
+                <tr class="stats__tr">
+                  <td class="stats__td">
+                    <span class="stats__rank" [class.stats__rank--top3]="scorer.rank <= 3">
+                      {{ scorer.rank }}
+                    </span>
+                  </td>
+                  <td class="stats__td stats__td--name">{{ scorer.name }}</td>
+                  <td class="stats__td">
+                    <div class="stats__nation">
+                      <img
+                        [src]="'https://flagcdn.com/w20/' + scorer.flagCode + '.png'"
+                        [alt]="scorer.nationality"
+                        class="stats__flag"
+                        onerror="this.style.display='none'"
+                      >
+                      {{ scorer.nationality }}
+                    </div>
+                  </td>
+                  <td class="stats__td">
+                    <span class="tag">{{ scorer.position }}</span>
+                  </td>
+                  <td class="stats__td stats__td--highlight">{{ scorer.goals }}</td>
+                  <td class="stats__td">{{ scorer.appearances }}</td>
+                  <td class="stats__td">{{ scorer.tournaments.join(', ') }}</td>
+                </tr>
+              }
+              @empty {
+                <tr>
+                  <td colspan="7" class="stats__empty">No results found for the current filters.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      <!-- Tournament History Table -->
+      @if (!isLoading() && filter().category === 'tournaments') {
+        <div class="stats__table-wrapper">
+          <table class="stats__table">
+            <thead>
+              <tr>
+                <th class="stats__th stats__th--sortable" (click)="updateSort('year')">
+                  Year {{ getSortIcon('year') }}
+                </th>
+                <th class="stats__th">Host</th>
+                <th class="stats__th">Champion</th>
+                <th class="stats__th">Runner-Up</th>
+                <th class="stats__th stats__th--sortable" (click)="updateSort('goals')">
+                  Goals {{ getSortIcon('goals') }}
+                </th>
+                <th class="stats__th">Top Scorer</th>
+                <th class="stats__th stats__th--sortable" (click)="updateSort('attendance')">
+                  Attendance {{ getSortIcon('attendance') }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (tournament of filteredTournaments(); track tournament.id) {
+                <tr class="stats__tr">
+                  <td class="stats__td stats__td--highlight">{{ tournament.year }}</td>
+                  <td class="stats__td">
+                    <div class="stats__nation">
+                      <img
+                        [src]="'https://flagcdn.com/w20/' + tournament.hostFlagCode + '.png'"
+                        [alt]="tournament.host"
+                        class="stats__flag"
+                        onerror="this.style.display='none'"
+                      >
+                      {{ tournament.host }}
+                    </div>
+                  </td>
+                  <td class="stats__td">
+                    <div class="stats__nation">
+                      <img
+                        [src]="'https://flagcdn.com/w20/' + tournament.championFlagCode + '.png'"
+                        [alt]="tournament.champion"
+                        class="stats__flag"
+                        onerror="this.style.display='none'"
+                      >
+                      <strong>{{ tournament.champion }}</strong>
+                    </div>
+                  </td>
+                  <td class="stats__td">
+                    <div class="stats__nation">
+                      <img
+                        [src]="'https://flagcdn.com/w20/' + tournament.runnerUpFlagCode + '.png'"
+                        [alt]="tournament.runnerUp"
+                        class="stats__flag"
+                        onerror="this.style.display='none'"
+                      >
+                      {{ tournament.runnerUp }}
+                    </div>
+                  </td>
+                  <td class="stats__td">{{ tournament.totalGoals }}</td>
+                  <td class="stats__td">{{ tournament.topScorer }} ({{ tournament.topScorerGoals }})</td>
+                  <td class="stats__td">{{ formatAttendance(tournament.attendance) }}</td>
+                </tr>
+              }
+              @empty {
+                <tr>
+                  <td colspan="7" class="stats__empty">No tournaments found for the current filters.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      <!-- Teams Table -->
+      @if (!isLoading() && filter().category === 'teams') {
+        <div class="stats__table-wrapper">
+          <table class="stats__table">
+            <thead>
+              <tr>
+                <th class="stats__th">Team</th>
+                <th class="stats__th">Conf.</th>
+                <th class="stats__th stats__th--sortable" (click)="updateSort('titles')">
+                  Titles {{ getSortIcon('titles') }}
+                </th>
+                <th class="stats__th stats__th--sortable" (click)="updateSort('appearances')">
+                  Apps {{ getSortIcon('appearances') }}
+                </th>
+                <th class="stats__th stats__th--sortable" (click)="updateSort('wins')">
+                  Wins {{ getSortIcon('wins') }}
+                </th>
+                <th class="stats__th">Draws</th>
+                <th class="stats__th">Losses</th>
+                <th class="stats__th stats__th--sortable" (click)="updateSort('goals')">
+                  GF {{ getSortIcon('goals') }}
+                </th>
+                <th class="stats__th">GA</th>
+                <th class="stats__th">Title Years</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (team of filteredTeams(); track team.id) {
+                <tr class="stats__tr">
+                  <td class="stats__td stats__td--name">
+                    <div class="stats__nation">
+                      <img
+                        [src]="'https://flagcdn.com/w20/' + team.flagCode + '.png'"
+                        [alt]="team.name"
+                        class="stats__flag"
+                        onerror="this.style.display='none'"
+                      >
+                      {{ team.name }}
+                    </div>
+                  </td>
+                  <td class="stats__td">{{ team.confederation }}</td>
+                  <td class="stats__td stats__td--highlight">{{ team.titles }}</td>
+                  <td class="stats__td">{{ team.appearances }}</td>
+                  <td class="stats__td">{{ team.wins }}</td>
+                  <td class="stats__td">{{ team.draws }}</td>
+                  <td class="stats__td">{{ team.losses }}</td>
+                  <td class="stats__td">{{ team.goalsScored }}</td>
+                  <td class="stats__td">{{ team.goalsConceded }}</td>
+                  <td class="stats__td stats__td--years">
+                    @if (team.titleYears.length > 0) {
+                      {{ team.titleYears.join(', ') }}
+                    } @else {
+                      <span class="stats__no-titles">—</span>
+                    }
+                  </td>
+                </tr>
+              }
+              @empty {
+                <tr>
+                  <td colspan="10" class="stats__empty">No teams found for the current filters.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </div>
+</main>

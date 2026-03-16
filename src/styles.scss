@@ -1,0 +1,104 @@
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
+@use 'styles/typography';
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-body;
+  background-color: $color-background;
+  color: $color-text-primary;
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: $color-secondary;
+  text-decoration: none;
+  transition: color $transition-base;
+  
+  &:hover {
+    color: lighten($color-secondary, 10%);
+  }
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $color-background;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $color-primary;
+  border-radius: $border-radius-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: $color-secondary;
+}
+
+.container {
+  @include container;
+}
+
+.section {
+  @include section-padding;
+}
+
+.btn-primary {
+  @include button-base;
+  @include gold-gradient;
+  color: $color-background;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+}
+
+.btn-secondary {
+  @include button-base;
+  background: transparent;
+  color: $color-secondary;
+  border: 2px solid $color-secondary;
+  
+  &:hover:not(:disabled) {
+    background: rgba($color-secondary, 0.1);
+  }
+}
+
+.card {
+  @include card-style;
+  padding: $spacing-lg;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: $spacing-xs $spacing-sm;
+  background: rgba($color-primary, 0.5);
+  border: 1px solid $color-border;
+  border-radius: $border-radius-full;
+  font-size: $font-size-xs;
+  font-family: $font-body;
+  font-weight: 600;
+  color: $color-secondary;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}

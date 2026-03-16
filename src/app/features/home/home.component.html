@@ -1,0 +1,162 @@
+<main class="home">
+  <!-- Hero Section -->
+  <section class="home__hero">
+    <div class="home__hero-bg"></div>
+    <div class="home__hero-content">
+      <span class="tag">⚽ Official World Cup Statistics</span>
+      <h1 class="home__hero-title">
+        FIFA World Cup
+        <span class="home__hero-title-highlight">Stats Hub</span>
+      </h1>
+      <p class="home__hero-subtitle">
+        Explore comprehensive statistics from every FIFA World Cup tournament.
+        Top scorers, team rankings, tournament history and more.
+      </p>
+      <div class="home__hero-actions">
+        <a routerLink="/stats" class="btn-primary">
+          Explore Statistics
+        </a>
+        <a routerLink="/newsletter" class="btn-secondary">
+          Subscribe Newsletter
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Stats Banner -->
+  <section class="home__quick-stats">
+    <div class="container">
+      <div class="home__quick-stats-grid">
+        @for (stat of stats; track stat.label) {
+          <div class="home__quick-stat">
+            <span class="home__quick-stat-icon">{{ stat.icon }}</span>
+            <div class="home__quick-stat-data">
+              <span class="home__quick-stat-value">{{ stat.value }}</span>
+              <span class="home__quick-stat-label">{{ stat.label }}</span>
+              <span class="home__quick-stat-desc">{{ stat.description }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Tournament -->
+  <section class="home__section section">
+    <div class="container">
+      <div class="home__section-header">
+        <span class="tag">Most Recent</span>
+        <h2 class="home__section-title">Latest World Cup</h2>
+      </div>
+
+      @if (latestTournament(); as tournament) {
+        <div class="home__tournament-card card">
+          <div class="home__tournament-year">
+            <span class="home__tournament-year-text">{{ tournament.year }}</span>
+            <span class="home__tournament-host">{{ tournament.host }}</span>
+          </div>
+          <div class="home__tournament-details">
+            <div class="home__tournament-champion">
+              <span class="home__tournament-detail-label">🏆 Champion</span>
+              <span class="home__tournament-detail-value">
+                <img
+                  [src]="'https://flagcdn.com/w40/' + tournament.championFlagCode + '.png'"
+                  [alt]="tournament.champion"
+                  class="home__flag"
+                  onerror="this.style.display='none'"
+                >
+                {{ tournament.champion }}
+              </span>
+            </div>
+            <div class="home__tournament-stats-row">
+              <div class="home__tournament-stat">
+                <span class="home__tournament-stat-number">{{ tournament.totalGoals }}</span>
+                <span class="home__tournament-stat-label">Total Goals</span>
+              </div>
+              <div class="home__tournament-stat">
+                <span class="home__tournament-stat-number">{{ tournament.teams }}</span>
+                <span class="home__tournament-stat-label">Teams</span>
+              </div>
+              <div class="home__tournament-stat">
+                <span class="home__tournament-stat-number">{{ tournament.matches }}</span>
+                <span class="home__tournament-stat-label">Matches</span>
+              </div>
+              <div class="home__tournament-stat">
+                <span class="home__tournament-stat-number">{{ tournament.topScorerGoals }}</span>
+                <span class="home__tournament-stat-label">Top Scorer Goals</span>
+              </div>
+            </div>
+            <div class="home__tournament-top-scorer">
+              <span class="home__tournament-detail-label">⚽ Top Scorer</span>
+              <span class="home__tournament-detail-value">{{ tournament.topScorer }}</span>
+            </div>
+          </div>
+        </div>
+      }
+
+      <div class="home__section-cta">
+        <a routerLink="/stats" class="btn-secondary">View All Tournaments →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- All-time Top Scorer -->
+  @if (topScorerAllTime(); as scorer) {
+    <section class="home__section home__section--dark section">
+      <div class="container">
+        <div class="home__section-header">
+          <span class="tag">All Time Record</span>
+          <h2 class="home__section-title">Top Goal Scorer</h2>
+        </div>
+        <div class="home__scorer-card card">
+          <div class="home__scorer-rank">#{{ scorer.rank }}</div>
+          <div class="home__scorer-info">
+            <div class="home__scorer-name-row">
+              <img
+                [src]="'https://flagcdn.com/w40/' + scorer.flagCode + '.png'"
+                [alt]="scorer.nationality"
+                class="home__flag"
+                onerror="this.style.display='none'"
+              >
+              <div>
+                <h3 class="home__scorer-name">{{ scorer.name }}</h3>
+                <span class="home__scorer-nationality">{{ scorer.nationality }}</span>
+              </div>
+            </div>
+            <div class="home__scorer-stats">
+              <div class="home__scorer-stat">
+                <span class="home__scorer-stat-value">{{ scorer.goals }}</span>
+                <span class="home__scorer-stat-label">World Cup Goals</span>
+              </div>
+              <div class="home__scorer-stat">
+                <span class="home__scorer-stat-value">{{ scorer.appearances }}</span>
+                <span class="home__scorer-stat-label">Appearances</span>
+              </div>
+              <div class="home__scorer-stat">
+                <span class="home__scorer-stat-value">{{ scorer.tournaments.length }}</span>
+                <span class="home__scorer-stat-label">Tournaments</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="home__section-cta">
+          <a routerLink="/stats" class="btn-secondary">View All Top Scorers →</a>
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- Newsletter CTA -->
+  <section class="home__section home__newsletter-cta section">
+    <div class="container">
+      <div class="home__newsletter-cta-content">
+        <h2 class="home__newsletter-cta-title">Stay Updated</h2>
+        <p class="home__newsletter-cta-text">
+          Subscribe to our newsletter and get the latest FIFA World Cup statistics
+          and updates delivered directly to your inbox.
+        </p>
+        <a routerLink="/newsletter" class="btn-primary">Subscribe Now</a>
+      </div>
+    </div>
+  </section>
+</main>
