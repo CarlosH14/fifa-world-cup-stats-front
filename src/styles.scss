@@ -28,7 +28,7 @@ a {
   transition: color $transition-base;
   
   &:hover {
-    color: lighten($color-secondary, 10%);
+    color: color.adjust($color-secondary, $lightness: 10%);
   }
 }
 
