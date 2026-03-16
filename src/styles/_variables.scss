@@ -1,0 +1,61 @@
+// Color Palette - FIFA inspired
+$color-primary: #1a3c6e;       // Deep FIFA Blue
+$color-secondary: #c8a84b;     // Golden/Trophy color
+$color-accent: #e63946;        // Red accent
+$color-background: #0d1b2a;    // Dark navy background
+$color-surface: #1e2d40;       // Card/surface color
+$color-surface-light: #253347; // Lighter surface
+$color-text-primary: #ffffff;
+$color-text-secondary: #b0bec5;
+$color-text-muted: #607d8b;
+$color-success: #4caf50;
+$color-error: #f44336;
+$color-border: #2d4a6e;
+
+// Typography
+$font-heading: 'Bebas Neue', sans-serif;
+$font-body: 'Montserrat', sans-serif;
+$font-secondary: 'Roboto', sans-serif;
+
+// Font Sizes
+$font-size-xs: 0.75rem;
+$font-size-sm: 0.875rem;
+$font-size-base: 1rem;
+$font-size-lg: 1.125rem;
+$font-size-xl: 1.25rem;
+$font-size-2xl: 1.5rem;
+$font-size-3xl: 2rem;
+$font-size-4xl: 2.5rem;
+$font-size-5xl: 3.5rem;
+
+// Spacing
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+$spacing-2xl: 3rem;
+$spacing-3xl: 4rem;
+
+// Border radius
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+$border-radius-xl: 20px;
+$border-radius-full: 9999px;
+
+// Shadows
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+$shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+$shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+
+// Transitions
+$transition-fast: 0.15s ease;
+$transition-base: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;

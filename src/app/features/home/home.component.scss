@@ -1,0 +1,350 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.home {
+
+  &__hero {
+    position: relative;
+    min-height: 100vh;
+    @include flex-center;
+    overflow: hidden;
+
+    &-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba($color-primary, 0.4) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba($color-secondary, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba($color-accent, 0.1) 0%, transparent 50%),
+        $color-background;
+    }
+
+    &-content {
+      position: relative;
+      @include container;
+      @include flex-column;
+      align-items: flex-start;
+      gap: $spacing-lg;
+      padding-top: 100px;
+      padding-bottom: $spacing-3xl;
+
+      @include responsive(md) {
+        align-items: center;
+        text-align: center;
+      }
+    }
+
+    &-title {
+      font-family: $font-heading;
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 1.05;
+      color: $color-text-primary;
+      letter-spacing: 0.03em;
+      max-width: 700px;
+
+      &-highlight {
+        @include text-gradient;
+        display: block;
+      }
+    }
+
+    &-subtitle {
+      font-size: $font-size-lg;
+      color: $color-text-secondary;
+      max-width: 550px;
+      line-height: 1.7;
+    }
+
+    &-actions {
+      @include flex-center;
+      gap: $spacing-md;
+      margin-top: $spacing-md;
+
+      @include responsive(sm) {
+        flex-direction: column;
+        width: 100%;
+
+        a {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    }
+  }
+
+  &__quick-stats {
+    background: $color-surface;
+    border-top: 1px solid $color-border;
+    border-bottom: 1px solid $color-border;
+    padding: $spacing-xl 0;
+
+    &-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: $spacing-md;
+
+      @include responsive(md) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @include responsive(sm) {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+
+  &__quick-stat {
+    @include flex-center;
+    gap: $spacing-md;
+    padding: $spacing-md;
+
+    &-icon {
+      font-size: $font-size-3xl;
+    }
+
+    &-data {
+      @include flex-column;
+      gap: 2px;
+    }
+
+    &-value {
+      font-family: $font-heading;
+      font-size: $font-size-3xl;
+      color: $color-secondary;
+      line-height: 1;
+    }
+
+    &-label {
+      font-family: $font-body;
+      font-weight: 700;
+      font-size: $font-size-sm;
+      color: $color-text-primary;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    &-desc {
+      font-size: $font-size-xs;
+      color: $color-text-muted;
+    }
+  }
+
+  &__section {
+
+    &-header {
+      @include flex-column;
+      align-items: flex-start;
+      gap: $spacing-sm;
+      margin-bottom: $spacing-xl;
+    }
+
+    &-title {
+      font-family: $font-heading;
+      font-size: $font-size-4xl;
+      color: $color-text-primary;
+    }
+
+    &-cta {
+      margin-top: $spacing-xl;
+    }
+
+    &--dark {
+      background: $color-surface;
+    }
+  }
+
+  &__tournament-card {
+    @include flex-between;
+    gap: $spacing-xl;
+
+    @include responsive(md) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  &__tournament-year {
+    @include flex-column;
+    align-items: center;
+    justify-content: center;
+    min-width: 140px;
+
+    &-text {
+      font-family: $font-heading;
+      font-size: 5rem;
+      @include text-gradient;
+      line-height: 1;
+    }
+  }
+
+  &__tournament-host {
+    font-size: $font-size-sm;
+    color: $color-text-muted;
+    text-align: center;
+  }
+
+  &__tournament-details {
+    @include flex-column;
+    gap: $spacing-lg;
+    flex: 1;
+  }
+
+  &__tournament-champion {
+    @include flex-column;
+    gap: $spacing-xs;
+  }
+
+  &__tournament-detail-label {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
+
+  &__tournament-detail-value {
+    @include flex-center;
+    justify-content: flex-start;
+    gap: $spacing-sm;
+    font-family: $font-heading;
+    font-size: $font-size-2xl;
+    color: $color-text-primary;
+  }
+
+  &__tournament-stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: $spacing-md;
+
+    @include responsive(sm) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &__tournament-stat {
+    @include flex-column;
+    align-items: center;
+    gap: 4px;
+    padding: $spacing-md;
+    background: rgba($color-primary, 0.2);
+    border-radius: $border-radius-md;
+    border: 1px solid $color-border;
+
+    &-number {
+      font-family: $font-heading;
+      font-size: $font-size-3xl;
+      color: $color-secondary;
+    }
+
+    &-label {
+      font-size: $font-size-xs;
+      color: $color-text-muted;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+
+  &__flag {
+    width: 32px;
+    height: 22px;
+    object-fit: cover;
+    border-radius: 3px;
+  }
+
+  &__scorer-card {
+    @include flex-between;
+    gap: $spacing-xl;
+
+    @include responsive(md) {
+      flex-direction: column;
+    }
+  }
+
+  &__scorer-rank {
+    font-family: $font-heading;
+    font-size: 6rem;
+    @include text-gradient;
+    line-height: 1;
+    min-width: 120px;
+    text-align: center;
+  }
+
+  &__scorer-info {
+    @include flex-column;
+    gap: $spacing-lg;
+    flex: 1;
+  }
+
+  &__scorer-name-row {
+    @include flex-center;
+    justify-content: flex-start;
+    gap: $spacing-md;
+  }
+
+  &__scorer-name {
+    font-family: $font-heading;
+    font-size: $font-size-4xl;
+    color: $color-text-primary;
+  }
+
+  &__scorer-nationality {
+    font-size: $font-size-sm;
+    color: $color-text-muted;
+  }
+
+  &__scorer-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $spacing-md;
+
+    @include responsive(sm) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__scorer-stat {
+    @include flex-column;
+    align-items: center;
+    padding: $spacing-md;
+    background: rgba($color-primary, 0.2);
+    border-radius: $border-radius-md;
+    border: 1px solid $color-border;
+
+    &-value {
+      font-family: $font-heading;
+      font-size: $font-size-3xl;
+      color: $color-secondary;
+    }
+
+    &-label {
+      font-size: $font-size-xs;
+      color: $color-text-muted;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+
+  &__newsletter-cta {
+    background: linear-gradient(135deg, rgba($color-primary, 0.3), rgba($color-secondary, 0.1));
+    border-top: 1px solid $color-border;
+    border-bottom: 1px solid $color-border;
+
+    &-content {
+      @include flex-column;
+      align-items: center;
+      text-align: center;
+      gap: $spacing-lg;
+    }
+
+    &-title {
+      font-family: $font-heading;
+      font-size: $font-size-4xl;
+    }
+
+    &-text {
+      max-width: 550px;
+      font-size: $font-size-lg;
+    }
+  }
+}

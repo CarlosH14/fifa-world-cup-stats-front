@@ -1,0 +1,166 @@
+<main class="newsletter">
+  <section class="newsletter__hero">
+    <div class="container">
+      <span class="tag">📧 Stay Informed</span>
+      <h1 class="newsletter__hero-title">FIFA World Cup Newsletter</h1>
+      <p class="newsletter__hero-subtitle">
+        Get the latest statistics, tournament updates, and historical insights
+        delivered directly to your inbox.
+      </p>
+    </div>
+  </section>
+
+  <section class="newsletter__content section">
+    <div class="container">
+      <div class="newsletter__grid">
+
+        <!-- Subscription Form -->
+        <div class="newsletter__form-wrapper">
+          @if (formStatus() === 'success') {
+            <div class="newsletter__success">
+              <div class="newsletter__success-icon">✅</div>
+              <h2 class="newsletter__success-title">You're subscribed!</h2>
+              <p class="newsletter__success-message">{{ statusMessage() }}</p>
+              <button class="btn-secondary" (click)="resetForm()">
+                Subscribe another email
+              </button>
+            </div>
+          } @else {
+            <form
+              class="newsletter__form card"
+              [formGroup]="subscribeForm"
+              (ngSubmit)="onSubmit()"
+              novalidate
+            >
+              <h2 class="newsletter__form-title">Subscribe Now</h2>
+              <p class="newsletter__form-subtitle">Join thousands of football fans</p>
+
+              <!-- Name field -->
+              <div class="newsletter__field">
+                <label class="newsletter__label" for="name">
+                  Your Name <span class="newsletter__optional">(optional)</span>
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  class="newsletter__input"
+                  formControlName="name"
+                  placeholder="Lionel Messi"
+                  autocomplete="name"
+                >
+              </div>
+
+              <!-- Email field -->
+              <div class="newsletter__field">
+                <label class="newsletter__label" for="email">
+                  Email Address <span class="newsletter__required">*</span>
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  class="newsletter__input"
+                  [class.newsletter__input--error]="emailControl?.invalid && emailControl?.touched"
+                  formControlName="email"
+                  placeholder="you@example.com"
+                  autocomplete="email"
+                >
+                @if (emailControl?.hasError('required') && emailControl?.touched) {
+                  <span class="newsletter__error">Email is required</span>
+                }
+                @if (emailControl?.hasError('email') && emailControl?.touched) {
+                  <span class="newsletter__error">Please enter a valid email address</span>
+                }
+              </div>
+
+              <!-- Preferences -->
+              <div class="newsletter__field">
+                <label class="newsletter__label">
+                  Topics of Interest <span class="newsletter__optional">(optional)</span>
+                </label>
+                <div class="newsletter__preferences">
+                  @for (pref of preferenceOptions; track pref.value) {
+                    <button
+                      type="button"
+                      class="newsletter__pref-chip"
+                      [class.newsletter__pref-chip--selected]="isPreferenceSelected(pref.value)"
+                      (click)="togglePreference(pref.value)"
+                    >
+                      {{ pref.label }}
+                    </button>
+                  }
+                </div>
+              </div>
+
+              <!-- Error message -->
+              @if (formStatus() === 'error') {
+                <div class="newsletter__status-error">
+                  ⚠️ {{ statusMessage() }}
+                </div>
+              }
+
+              <!-- Submit -->
+              <button
+                type="submit"
+                class="btn-primary newsletter__submit"
+                [disabled]="formStatus() === 'loading'"
+              >
+                @if (formStatus() === 'loading') {
+                  <span class="newsletter__spinner"></span>
+                  Subscribing...
+                } @else {
+                  Subscribe to Newsletter
+                }
+              </button>
+
+              <p class="newsletter__disclaimer">
+                🔒 Your email is safe with us. Unsubscribe at any time. (This is a demo — no real emails are sent.)
+              </p>
+            </form>
+          }
+        </div>
+
+        <!-- Benefits sidebar -->
+        <div class="newsletter__benefits">
+          <h2 class="newsletter__benefits-title">What you'll receive</h2>
+          <ul class="newsletter__benefits-list">
+            <li class="newsletter__benefit">
+              <span class="newsletter__benefit-icon">⚽</span>
+              <div>
+                <strong>Top Scorer Updates</strong>
+                <p>Track goal-scoring records across all World Cup editions</p>
+              </div>
+            </li>
+            <li class="newsletter__benefit">
+              <span class="newsletter__benefit-icon">🏆</span>
+              <div>
+                <strong>Tournament Insights</strong>
+                <p>Deep-dive analysis of past and future World Cups</p>
+              </div>
+            </li>
+            <li class="newsletter__benefit">
+              <span class="newsletter__benefit-icon">📊</span>
+              <div>
+                <strong>Statistical Reports</strong>
+                <p>Comprehensive data on teams, players, and performances</p>
+              </div>
+            </li>
+            <li class="newsletter__benefit">
+              <span class="newsletter__benefit-icon">🌍</span>
+              <div>
+                <strong>Team Rankings</strong>
+                <p>Updated rankings and historical performance comparisons</p>
+              </div>
+            </li>
+            <li class="newsletter__benefit">
+              <span class="newsletter__benefit-icon">📜</span>
+              <div>
+                <strong>Historical Facts</strong>
+                <p>Fascinating stories and records from World Cup history</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
