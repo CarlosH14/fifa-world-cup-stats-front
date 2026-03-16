@@ -44,14 +44,10 @@
                   id="name"
                   type="text"
                   class="newsletter__input"
-                  [class.newsletter__input--error]="nameControl?.invalid && nameControl?.touched"
                   formControlName="name"
                   placeholder="Lionel Messi"
                   autocomplete="name"
                 >
-                @if (nameControl?.invalid && nameControl?.touched) {
-                  <span class="newsletter__error">Name must be at least 2 characters</span>
-                }
               </div>
 
               <!-- Email field -->

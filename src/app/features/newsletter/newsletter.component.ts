@@ -32,7 +32,7 @@ export class NewsletterComponent {
     private readonly newsletterService: NewsletterService
   ) {
     this.subscribeForm = this.fb.group({
-      name: ['', [Validators.minLength(2)]],
+      name: [''],
       email: ['', [Validators.required, Validators.email]],
       preferences: this.fb.group(
         Object.fromEntries(this.preferenceOptions.map(p => [p.value, false]))
