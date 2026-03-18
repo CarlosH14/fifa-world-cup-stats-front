@@ -278,6 +278,12 @@
     border-radius: 2px;
   }
 
+  &__team-badge {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+
   &__no-titles {
     color: $color-text-muted;
   }
