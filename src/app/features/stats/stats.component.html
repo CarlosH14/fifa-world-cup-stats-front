@@ -280,12 +280,21 @@
                 <tr class="stats__tr">
                   <td class="stats__td stats__td--name">
                     <div class="stats__nation">
-                      <img
-                        [src]="'https://flagcdn.com/w20/' + team.flagCode + '.png'"
-                        [alt]="team.name"
-                        class="stats__flag"
-                        onerror="this.style.display='none'"
-                      >
+                      @if (team.logoUrl) {
+                        <img
+                          [src]="team.logoUrl"
+                          [alt]="team.name"
+                          class="stats__team-badge"
+                          onerror="this.style.display='none'"
+                        >
+                      } @else {
+                        <img
+                          [src]="'https://flagcdn.com/w20/' + team.flagCode + '.png'"
+                          [alt]="team.name"
+                          class="stats__flag"
+                          onerror="this.style.display='none'"
+                        >
+                      }
                       {{ team.name }}
                     </div>
                   </td>
