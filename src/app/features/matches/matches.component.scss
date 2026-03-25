@@ -1,0 +1,533 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.matches {
+  min-height: 100vh;
+
+  &__hero {
+    @include section-padding;
+    background: linear-gradient(135deg, $color-background 0%, $color-primary 100%);
+    text-align: center;
+    padding-top: $spacing-3xl;
+
+    .tag {
+      display: inline-block;
+      background: rgba($color-secondary, 0.15);
+      color: $color-secondary;
+      padding: $spacing-xs $spacing-md;
+      border-radius: $border-radius-full;
+      font-size: $font-size-sm;
+      font-weight: 600;
+      margin-bottom: $spacing-md;
+    }
+
+    &-title {
+      font-family: $font-heading;
+      font-size: $font-size-5xl;
+      color: $color-text-primary;
+      letter-spacing: 2px;
+      margin-bottom: $spacing-sm;
+
+      @include responsive(md) {
+        font-size: $font-size-4xl;
+      }
+    }
+
+    &-subtitle {
+      color: $color-text-secondary;
+      font-size: $font-size-lg;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+
+  &__selector {
+    background: $color-surface;
+    border-bottom: 1px solid $color-border;
+    padding: $spacing-md 0;
+    position: sticky;
+    top: 64px;
+    z-index: 10;
+
+    &-row {
+      @include flex-center;
+    }
+  }
+
+  &__years {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-xs;
+    justify-content: center;
+  }
+
+  &__year-btn {
+    display: inline-flex; align-items: center; gap: $spacing-xs;
+    background: transparent; color: $color-text-secondary;
+    border: 1px solid $color-border; padding: $spacing-xs $spacing-md;
+    font-size: $font-size-sm; font-family: $font-body; font-weight: 600;
+    border-radius: $border-radius-md; cursor: pointer;
+    transition: all $transition-base;
+
+    &:hover { background: rgba($color-secondary, 0.1); color: $color-text-primary; border-color: $color-secondary; }
+
+    &--active {
+      background: $color-secondary; color: $color-background;
+      border-color: $color-secondary; font-weight: 700;
+    }
+  }
+
+  &__mini-flag {
+    width: 16px;
+    height: 12px;
+    object-fit: cover;
+    border-radius: 2px;
+  }
+
+  &__loading {
+    @include flex-center;
+    @include flex-column;
+    gap: $spacing-md;
+    padding: $spacing-3xl;
+    color: $color-text-secondary;
+
+    &-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid $color-border;
+      border-top-color: $color-secondary;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+  }
+
+  &__info {
+    background: $color-background;
+    border-bottom: 1px solid $color-border;
+    padding: $spacing-md 0;
+
+    &-row {
+      display: flex;
+      justify-content: center;
+      gap: $spacing-2xl;
+      flex-wrap: wrap;
+
+      @include responsive(md) {
+        gap: $spacing-lg;
+      }
+    }
+
+    &-item {
+      @include flex-column;
+      align-items: center;
+      gap: $spacing-xs;
+    }
+
+    &-label {
+      font-size: $font-size-xs;
+      color: $color-text-muted;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    &-value {
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+      font-size: $font-size-base;
+      color: $color-text-primary;
+      font-weight: 600;
+
+      &--champion {
+        color: $color-secondary;
+      }
+    }
+  }
+
+  &__flag {
+    width: 20px;
+    height: 14px;
+    object-fit: cover;
+    border-radius: 2px;
+  }
+
+  &__tabs {
+    background: $color-surface;
+    border-bottom: 1px solid $color-border;
+    padding: $spacing-sm 0;
+
+    &-list {
+      display: flex;
+      gap: $spacing-sm;
+      justify-content: center;
+    }
+  }
+
+  &__tab {
+    background: transparent; color: $color-text-secondary; border: none;
+    padding: $spacing-sm $spacing-lg; border-radius: $border-radius-md;
+    font-size: $font-size-sm; font-family: $font-body; font-weight: 600;
+    cursor: pointer; transition: all $transition-base;
+    &:hover { background: rgba($color-secondary, 0.1); color: $color-text-primary; }
+    &--active { background: rgba($color-secondary, 0.15); color: $color-secondary; font-weight: 700; }
+  }
+
+  &__content {
+    @include section-padding;
+    background: $color-background;
+  }
+}
+
+// ========================================
+// BRACKET VISUALIZATION
+// ========================================
+.bracket-container {
+  width: 100%;
+  overflow-x: auto;
+  padding: $spacing-xl 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bracket {
+  display: flex;
+  gap: 0;
+  min-width: fit-content;
+  align-items: center;
+  padding: 0 $spacing-xl;
+
+  &__round {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-width: 250px;
+    padding: 0 $spacing-lg;
+
+    &-title {
+      font-family: $font-heading;
+      font-size: $font-size-xl;
+      color: $color-secondary;
+      text-align: center;
+      margin-bottom: $spacing-lg;
+      letter-spacing: 1px;
+    }
+
+    &--r16 {
+      .bracket__matches {
+        gap: $spacing-md;
+      }
+    }
+
+    &--qf,
+    &--sf,
+    &--final {
+      .bracket__match::before {
+        content: '';
+        position: absolute;
+        left: -$spacing-lg;
+        top: 50%;
+        width: $spacing-lg;
+        height: 1px;
+        background: $color-border;
+      }
+    }
+
+    &--qf .bracket__matches { gap: 60px; }
+    &--sf .bracket__matches { gap: 180px; }
+
+    &--final .bracket__match-card {
+      border-color: $color-secondary;
+      box-shadow: 0 0 20px rgba($color-secondary, 0.3);
+    }
+  }
+
+  &__matches {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+    justify-content: center;
+    flex: 1;
+  }
+
+  &__match {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    &-date {
+      font-size: $font-size-xs;
+      color: $color-text-muted;
+      text-align: center;
+    }
+
+    &-card {
+      @include card-style;
+      overflow: hidden;
+      transition: transform $transition-fast, box-shadow $transition-fast;
+      position: relative;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: $shadow-lg;
+      }
+    }
+  }
+
+  &__team {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    transition: background $transition-fast;
+
+    &:first-child {
+      border-bottom: 1px solid rgba($color-border, 0.5);
+    }
+
+    &-info {
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+    }
+
+    &-name {
+      font-size: $font-size-sm;
+      font-weight: 500;
+      color: $color-text-primary;
+      white-space: nowrap;
+    }
+
+    &--winner {
+      background: rgba($color-secondary, 0.1);
+
+      .bracket__team-name {
+        font-weight: 700;
+        color: $color-secondary;
+      }
+
+      .bracket__score {
+        background: $color-secondary;
+        color: $color-background;
+      }
+    }
+
+    &--loser {
+      .bracket__team-name {
+        color: $color-text-muted;
+      }
+    }
+  }
+
+  &__flag {
+    width: 20px;
+    height: 14px;
+    object-fit: cover;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  &__score {
+    font-size: $font-size-sm;
+    font-weight: 700;
+    min-width: 24px;
+    height: 24px;
+    @include flex-center;
+    border-radius: $border-radius-sm;
+    background: $color-surface-light;
+    color: $color-text-primary;
+  }
+
+  &__penalties {
+    text-align: center;
+    font-size: $font-size-xs;
+    color: $color-accent;
+    font-weight: 700;
+    padding: 4px 0;
+    background: rgba($color-accent, 0.08);
+    letter-spacing: 0.5px;
+  }
+
+  &__venue {
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  &__third-place {
+    margin-top: $spacing-2xl;
+    padding: $spacing-lg $spacing-xl;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-md;
+    border-top: 1px solid $color-border;
+
+    .bracket__round-title {
+      margin-bottom: 0;
+    }
+
+    .bracket__match {
+      min-width: 250px;
+    }
+  }
+}
+
+// Connector lines between rounds
+.bracket__round--r16,
+.bracket__round--qf,
+.bracket__round--sf {
+  .bracket__match::after {
+    content: '';
+    position: absolute;
+    right: -$spacing-lg;
+    top: 50%;
+    width: $spacing-lg;
+    height: 1px;
+    background: $color-border;
+  }
+}
+
+// ========================================
+// GROUP STAGE
+// ========================================
+.groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: $spacing-xl;
+
+  @include responsive(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.group {
+  @include card-style;
+  overflow: hidden;
+
+  &__title {
+    font-family: $font-heading;
+    font-size: $font-size-2xl;
+    color: $color-secondary;
+    padding: $spacing-md $spacing-lg;
+    background: rgba($color-secondary, 0.08);
+    border-bottom: 1px solid $color-border;
+    letter-spacing: 1px;
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  &__th {
+    padding: $spacing-sm $spacing-sm;
+    text-align: center;
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid $color-border;
+    font-weight: 600;
+
+    &--team {
+      text-align: left;
+      padding-left: $spacing-lg;
+    }
+
+    &--pts {
+      color: $color-secondary;
+    }
+  }
+
+  &__row {
+    transition: background $transition-fast;
+
+    &:hover {
+      background: rgba($color-text-primary, 0.03);
+    }
+
+    &--qualified {
+      border-left: 3px solid $color-success;
+
+      .group__td--team {
+        padding-left: calc(#{$spacing-lg} - 3px);
+      }
+    }
+  }
+
+  &__td {
+    padding: $spacing-sm;
+    text-align: center;
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    border-bottom: 1px solid rgba($color-border, 0.4);
+
+    &--team {
+      text-align: left;
+      padding-left: $spacing-lg;
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+      font-weight: 500;
+      color: $color-text-primary;
+    }
+
+    &--pts {
+      font-weight: 700;
+      color: $color-secondary;
+    }
+  }
+
+  &__flag {
+    width: 20px;
+    height: 14px;
+    object-fit: cover;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  &__flag-sm { width: 16px; height: 12px; object-fit: cover; border-radius: 1px; }
+
+  &__matches {
+    padding: $spacing-md $spacing-lg;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+    border-top: 1px solid $color-border;
+  }
+
+  &__match {
+    padding: $spacing-sm;
+    border-radius: $border-radius-sm;
+    background: rgba($color-surface-light, 0.5);
+
+    &-teams { display: flex; align-items: center; justify-content: space-between; gap: $spacing-sm; }
+
+    &-team {
+      display: flex; align-items: center; gap: $spacing-xs;
+      font-size: $font-size-sm; color: $color-text-secondary; flex: 1;
+      &:last-child { justify-content: flex-end; }
+      &--winner { color: $color-text-primary; font-weight: 600; }
+    }
+
+    &-score {
+      font-weight: 700; font-size: $font-size-sm; color: $color-text-primary;
+      background: $color-surface; padding: 2px $spacing-sm; border-radius: $border-radius-sm;
+      min-width: 50px; text-align: center; flex-shrink: 0;
+    }
+
+    &-info { font-size: $font-size-xs; color: $color-text-muted; margin-top: 4px; text-align: center; }
+  }
+}
+
+.container {
+  @include container;
+}
+
+.section {
+  @include section-padding;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

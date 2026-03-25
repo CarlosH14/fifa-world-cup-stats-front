@@ -1,0 +1,304 @@
+<main class="matches">
+  <!-- Hero -->
+  <section class="matches__hero">
+    <div class="container">
+      <span class="tag">🏟️ Match History</span>
+      <h1 class="matches__hero-title">World Cup Matches</h1>
+      <p class="matches__hero-subtitle">
+        Explore every match from group stage to the final — with knockout brackets
+      </p>
+    </div>
+  </section>
+
+  <!-- Tournament Selector -->
+  <div class="matches__selector">
+    <div class="container">
+      <div class="matches__selector-row">
+        <div class="matches__years">
+          @for (t of tournaments(); track t.year) {
+            <button
+              class="matches__year-btn"
+              [class.matches__year-btn--active]="selectedYear() === t.year"
+              (click)="selectYear(t.year)"
+            >
+              <img
+                [src]="'https://flagcdn.com/w20/' + t.hostFlagCode + '.png'"
+                [alt]="t.host"
+                class="matches__mini-flag"
+                onerror="this.style.display='none'"
+              >
+              {{ t.year }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <div class="matches__loading">
+      <div class="matches__loading-spinner"></div>
+      <p>Loading match data...</p>
+    </div>
+  }
+
+  @if (!isLoading() && selectedTournament(); as tournament) {
+    <!-- Tournament Info Bar -->
+    <div class="matches__info">
+      <div class="container">
+        <div class="matches__info-row">
+          <div class="matches__info-item">
+            <span class="matches__info-label">Host</span>
+            <span class="matches__info-value">
+              <img
+                [src]="'https://flagcdn.com/w20/' + tournament.hostFlagCode + '.png'"
+                [alt]="tournament.host"
+                class="matches__flag"
+                onerror="this.style.display='none'"
+              >
+              {{ tournament.host }}
+            </span>
+          </div>
+          <div class="matches__info-item">
+            <span class="matches__info-label">Champion</span>
+            <span class="matches__info-value matches__info-value--champion">
+              <img
+                [src]="'https://flagcdn.com/w20/' + tournament.championFlagCode + '.png'"
+                [alt]="tournament.champion"
+                class="matches__flag"
+                onerror="this.style.display='none'"
+              >
+              {{ tournament.champion }}
+            </span>
+          </div>
+          <div class="matches__info-item">
+            <span class="matches__info-label">Format</span>
+            <span class="matches__info-value">{{ formatLabel() }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Tabs -->
+    <div class="matches__tabs">
+      <div class="container">
+        <div class="matches__tabs-list">
+          <button
+            class="matches__tab"
+            [class.matches__tab--active]="activeView() === 'knockout'"
+            (click)="setView('knockout')"
+          >
+            🏆 Knockout Bracket
+          </button>
+          <button
+            class="matches__tab"
+            [class.matches__tab--active]="activeView() === 'groups'"
+            (click)="setView('groups')"
+          >
+            📋 Group Stage
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Knockout Bracket View -->
+    @if (activeView() === 'knockout') {
+      <section class="matches__content section">
+        <div class="bracket-container">
+          <div class="bracket">
+            @for (round of knockoutRounds(); track round.name) {
+              <div class="bracket__round" [ngClass]="getRoundColumnClass(round.name)">
+                <h3 class="bracket__round-title">{{ round.name }}</h3>
+                <div class="bracket__matches">
+                  @for (match of round.matches; track match.id) {
+                    <div class="bracket__match">
+                      <div class="bracket__match-date">{{ formatDate(match.date) }}</div>
+                      <div class="bracket__match-card">
+                        <div
+                          class="bracket__team"
+                          [class.bracket__team--winner]="isWinner(match, 'team1')"
+                          [class.bracket__team--loser]="getMatchWinner(match) && !isWinner(match, 'team1')"
+                        >
+                          <div class="bracket__team-info">
+                            <img
+                              [src]="'https://flagcdn.com/w20/' + match.team1FlagCode + '.png'"
+                              [alt]="match.team1"
+                              class="bracket__flag"
+                              onerror="this.style.display='none'"
+                            >
+                            <span class="bracket__team-name">{{ match.team1 }}</span>
+                          </div>
+                          <span class="bracket__score">{{ match.score1 }}</span>
+                        </div>
+                        <div
+                          class="bracket__team"
+                          [class.bracket__team--winner]="isWinner(match, 'team2')"
+                          [class.bracket__team--loser]="getMatchWinner(match) && !isWinner(match, 'team2')"
+                        >
+                          <div class="bracket__team-info">
+                            <img
+                              [src]="'https://flagcdn.com/w20/' + match.team2FlagCode + '.png'"
+                              [alt]="match.team2"
+                              class="bracket__flag"
+                              onerror="this.style.display='none'"
+                            >
+                            <span class="bracket__team-name">{{ match.team2 }}</span>
+                          </div>
+                          <span class="bracket__score">{{ match.score2 }}</span>
+                        </div>
+                        @if (match.penalties) {
+                          <div class="bracket__penalties">
+                            PEN {{ match.penalties }}
+                          </div>
+                        }
+                      </div>
+                      @if (match.stage === 'Final') {
+                        <div class="bracket__venue">{{ match.stadium }}, {{ match.city }}</div>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Third Place Match -->
+          @if (thirdPlaceMatch(); as match) {
+            <div class="bracket__third-place">
+              <h3 class="bracket__round-title">Third Place Play-off</h3>
+              <div class="bracket__match">
+                <div class="bracket__match-date">{{ formatDate(match.date) }}</div>
+                <div class="bracket__match-card">
+                  <div
+                    class="bracket__team"
+                    [class.bracket__team--winner]="isWinner(match, 'team1')"
+                    [class.bracket__team--loser]="getMatchWinner(match) && !isWinner(match, 'team1')"
+                  >
+                    <div class="bracket__team-info">
+                      <img
+                        [src]="'https://flagcdn.com/w20/' + match.team1FlagCode + '.png'"
+                        [alt]="match.team1"
+                        class="bracket__flag"
+                        onerror="this.style.display='none'"
+                      >
+                      <span class="bracket__team-name">{{ match.team1 }}</span>
+                    </div>
+                    <span class="bracket__score">{{ match.score1 }}</span>
+                  </div>
+                  <div
+                    class="bracket__team"
+                    [class.bracket__team--winner]="isWinner(match, 'team2')"
+                    [class.bracket__team--loser]="getMatchWinner(match) && !isWinner(match, 'team2')"
+                  >
+                    <div class="bracket__team-info">
+                      <img
+                        [src]="'https://flagcdn.com/w20/' + match.team2FlagCode + '.png'"
+                        [alt]="match.team2"
+                        class="bracket__flag"
+                        onerror="this.style.display='none'"
+                      >
+                      <span class="bracket__team-name">{{ match.team2 }}</span>
+                    </div>
+                    <span class="bracket__score">{{ match.score2 }}</span>
+                  </div>
+                  @if (match.penalties) {
+                    <div class="bracket__penalties">
+                      PEN {{ match.penalties }}
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    <!-- Group Stage View -->
+    @if (activeView() === 'groups') {
+      <section class="matches__content section">
+        <div class="container">
+          <div class="groups">
+            @for (group of tournament.groups; track group.name) {
+              <div class="group">
+                <h3 class="group__title">Group {{ group.name }}</h3>
+                <table class="group__table">
+                  <thead>
+                    <tr>
+                      <th class="group__th group__th--team">Team</th>
+                      <th class="group__th">P</th>
+                      <th class="group__th">W</th>
+                      <th class="group__th">D</th>
+                      <th class="group__th">L</th>
+                      <th class="group__th">GF</th>
+                      <th class="group__th">GA</th>
+                      <th class="group__th group__th--pts">Pts</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (team of group.teams; track team.name; let i = $index) {
+                      <tr class="group__row" [class.group__row--qualified]="i < 2">
+                        <td class="group__td group__td--team">
+                          <img
+                            [src]="'https://flagcdn.com/w20/' + team.flagCode + '.png'"
+                            [alt]="team.name"
+                            class="group__flag"
+                            onerror="this.style.display='none'"
+                          >
+                          {{ team.name }}
+                        </td>
+                        <td class="group__td">{{ team.played }}</td>
+                        <td class="group__td">{{ team.won }}</td>
+                        <td class="group__td">{{ team.drawn }}</td>
+                        <td class="group__td">{{ team.lost }}</td>
+                        <td class="group__td">{{ team.goalsFor }}</td>
+                        <td class="group__td">{{ team.goalsAgainst }}</td>
+                        <td class="group__td group__td--pts">{{ team.points }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+
+                <!-- Group Matches -->
+                @if (group.matches.length > 0) {
+                  <div class="group__matches">
+                    @for (match of group.matches; track match.id) {
+                      <div class="group__match">
+                        <div class="group__match-teams">
+                          <span class="group__match-team" [class.group__match-team--winner]="match.score1 > match.score2">
+                            <img
+                              [src]="'https://flagcdn.com/w20/' + match.team1FlagCode + '.png'"
+                              [alt]="match.team1"
+                              class="group__flag-sm"
+                              onerror="this.style.display='none'"
+                            >
+                            {{ match.team1 }}
+                          </span>
+                          <span class="group__match-score">
+                            {{ match.score1 }} - {{ match.score2 }}
+                          </span>
+                          <span class="group__match-team" [class.group__match-team--winner]="match.score2 > match.score1">
+                            {{ match.team2 }}
+                            <img
+                              [src]="'https://flagcdn.com/w20/' + match.team2FlagCode + '.png'"
+                              [alt]="match.team2"
+                              class="group__flag-sm"
+                              onerror="this.style.display='none'"
+                            >
+                          </span>
+                        </div>
+                        <div class="group__match-info">
+                          {{ formatDate(match.date) }} — {{ match.stadium }}
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      </section>
+    }
+  }
+</main>

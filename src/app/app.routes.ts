@@ -10,6 +10,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/stats/stats.component').then(m => m.StatsComponent)
   },
   {
+    path: 'matches',
+    loadComponent: () => import('./features/matches/matches.component').then(m => m.MatchesComponent)
+  },
+  {
     path: 'newsletter',
     loadComponent: () => import('./features/newsletter/newsletter.component').then(m => m.NewsletterComponent)
   },
