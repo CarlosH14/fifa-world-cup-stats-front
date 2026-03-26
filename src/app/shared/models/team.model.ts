@@ -2,6 +2,7 @@ export interface Team {
   id: number;
   name: string;
   flagCode: string;
+  logoUrl?: string;
   confederation: string;
   titles: number;
   appearances: number;
