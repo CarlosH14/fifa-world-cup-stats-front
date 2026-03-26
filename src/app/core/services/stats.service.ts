@@ -52,4 +52,8 @@ export class StatsService {
   private normalizeName(name: string): string {
     return name.trim().toLowerCase();
   }
+
+  getTournamentMatches(): Observable<TournamentMatches[]> {
+    return of([...MATCHES_MOCK]).pipe(delay(500));
+  }
 }
